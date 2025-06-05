@@ -42,9 +42,7 @@ It is designed to showcase my skills, projects, certifications, education, and e
 
 ---
 
-## Screenshots
-
-![Portfolio Screenshot](https://pplx-res.cloudinary.com/image/private/user_uploads/51288755/8b9bdcea-3bf0-4b12-8741-e647f7fb5fbd/image Stack
+## Stack
 
 - **HTML5** – Semantic, accessible markup
 - **CSS3** – Custom properties, flexbox, grid, responsive design, keyframe animations
