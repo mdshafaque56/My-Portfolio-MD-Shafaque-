@@ -21,7 +21,7 @@
 
 ## About
 
-This is the personal portfolio website of **MD Shafaque**, an undergraduate at NIT Calicut (B.Tech Civil Engineering, Minor in AI/ML).  
+This is my personal portfolio website.  
 It is designed to showcase my skills, projects, certifications, education, and experience, with a modern, interactive, and responsive user interface.
 
 ---
