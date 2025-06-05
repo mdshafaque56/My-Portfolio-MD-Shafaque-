@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MD Shafaque | Engineer by Degree, AI Developer by Passion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Inter:700,600,400|Roboto:400,700,400italic&display=swap" rel="stylesheet">
+  <style>
+    #preloader {
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #101014;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s cubic-bezier(.77,0,.18,1), visibility 1s cubic-bezier(.77,0,.18,1);
+    }
+
+    .preloader-hex-grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 120px;
+    height: 104px;
+    margin-bottom: 2.5em;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    }
+
+    .hexagon {
+    width: 40px;
+    height: 23px;
+    background: none;
+    position: absolute;
+    animation: hexPulse 1.2s infinite;
+    }
+    .hexagon:before, .hexagon:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 40px;
+    height: 23px;
+    background: #38bdf8;
+    opacity: 0.4;
+    border-radius: 6px;
+    transition: background 0.3s;
+    }
+    .hexagon:before {
+    transform: rotate(60deg);
+    }
+    .hexagon:after {
+    transform: rotate(-60deg);
+    }
+    .hexagon:nth-child(1) { left: 40px; top: 0px; animation-delay: 0s;}
+    .hexagon:nth-child(2) { left: 0px; top: 20px; animation-delay: 0.2s;}
+    .hexagon:nth-child(3) { left: 80px; top: 20px; animation-delay: 0.4s;}
+    .hexagon:nth-child(4) { left: 0px; top: 60px; animation-delay: 0.6s;}
+    .hexagon:nth-child(5) { left: 80px; top: 60px; animation-delay: 0.8s;}
+    .hexagon:nth-child(6) { left: 40px; top: 80px; animation-delay: 1s;}
+
+    @keyframes hexPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+    }
+
+    .preloader-texts {
+    text-align: center;
+    color: #facc15;
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    }
+    .preloader-title {
+    font-size: 2.7em;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    animation: fadeInUp 1.2s cubic-bezier(.77,0,.18,1);
+    margin-bottom: 0.7em;
+    color: #facc15;
+    text-shadow: 0 2px 16px #000a;
+    }
+    .preloader-sub {
+    color: #38bdf8;
+    font-size: 1.13em;
+    font-weight: 600;
+    font-style: italic;
+    max-width: 90vw;
+    margin: 0 auto;
+    animation: fadeInUp 2s cubic-bezier(.77,0,.18,1) 0.8s;
+    }
+    @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px);}
+    to { opacity: 1; transform: none;}
+    }
+    body.loaded #preloader {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    }
+
+    :root {
+      --primary: #38bdf8;
+      --accent: #facc15;
+      --bg-light: #f8fafc;
+      --bg-dark: #18181b;
+      --card-light: #e2e8f0cc;
+      --card-dark: #27272acc;
+      --text-light: #18181b;
+      --text-dark: #f1f5f9;
+      --font-header: 'Inter', sans-serif;
+      --font-body: 'Roboto', sans-serif;
+      --transition: 0.5s cubic-bezier(.77,0,.18,1);
+      --overlay: rgba(18,22,34,0.65);
+    }
+    html, body, * {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body);
+      min-height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      background: transparent;
+      color: var(--text-dark);
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+    body.dark {
+      color: var(--text-dark);
+    }
+    #hex-bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      min-width: 100vw; min-height: 100vh;
+      background: #111;
+      z-index: -10;
+      display: block;
+    }
+    #bg-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: var(--overlay);
+      z-index: -5;
+      pointer-events: none;
+      transition: background 0.7s;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5em 1.5em 2em 1.5em;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1em 0 0.5em 0;
+      position: sticky;
+      top: 0;
+      background: transparent;
+      z-index: 100;
+    }
+    .theme-toggle {
+      border: none;
+      background: var(--card-light);
+      color: var(--primary);
+      font-size: 1.7em;
+      border-radius: 50%;
+      width: 2.5em;
+      height: 2.5em;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      box-shadow: 0 2px 8px rgba(56,189,248,0.09);
+    }
+    body.dark .theme-toggle {
+      background: var(--card-dark);
+      color: var(--accent);
+    }
+    nav a {
+      color: var(--text-dark);
+      text-decoration: none;
+      margin: 0 1.1em;
+      font-weight: 700;
+      font-size: 1.1em;
+      letter-spacing: 0.02em;
+      transition: color var(--transition);
+      font-family: var(--font-header);
+    }
+    nav a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+    body.dark nav a {
+      color: var(--text-dark);
+    }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      gap: 1.1em;
+      margin-bottom: 1.5em;
+      animation: fadeIn 1.2s;
+    }
+    .hero-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid var(--primary);
+      box-shadow: 0 6px 32px rgba(56,189,248,0.14);
+      margin-bottom: 1em;
+    }
+    .hero h1 {
+      font-size: 3.2em;
+      font-family: var(--font-header);
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--accent);
+      text-shadow: 2px 2px 8px #00000030;
+    }
+    .tagline {
+      font-size: 1.35em;
+      color: var(--primary);
+      font-style: italic;
+      font-weight: 600;
+      margin-bottom: 1em;
+      letter-spacing: 0.01em;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7em;
+      justify-content: center;
+    }
+    .skill-tag {
+      background: var(--primary);
+      color: #fff;
+      padding: 0.5em 1.2em;
+      border-radius: 1.5em;
+      font-size: 1.05em;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-family: var(--font-header);
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(56,189,248,0.09);
+    }
+    .skill-tag:hover {
+      transform: scale(1.11);
+      background: var(--accent);
+      color: var(--text-dark);
+    }
+    section {
+      margin: 3em 0;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.1s var(--transition), transform 1.1s var(--transition);
+      will-change: opacity, transform;
+    }
+    section.visible {
+      opacity: 1;
+      transform: none;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: none;}
+    }
+    .section-title {
+      font-size: 2.5em;
+      color: var(--primary);
+      font-family: var(--font-header);
+      font-weight: 900;
+      margin-bottom: 1.1em;
+      letter-spacing: 0.04em;
+      text-shadow: 1px 2px 8px #00000020;
+    }
+    .about {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 1.22em;
+      line-height: 1.7;
+      background: var(--card-light);
+      padding: 1.6em;
+      border-radius: 1.1em;
+      box-shadow: 0 2px 18px rgba(0,0,0,0.07);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-light);
+      transition: background var(--transition), color var(--transition);
+    }
+    body.dark .about {
+      background: var(--card-dark);
+      color: var(--text-dark);
+    }
+    .main-content {
+      display: flex;
+      gap: 2em;
+      width: 100%;
+    }
+    .sidebar {
+      min-width: 250px;
+      max-width: 300px;
+      background: var(--card-light);
+      border-radius: 1em;
+      padding: 1.5em 1em;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      height: fit-content;
+      position: sticky;
+      top: 7em;
+      transition: background var(--transition);
+    }
+    body.dark .sidebar {
+      background: var(--card-dark);
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 1em;
+      font-family: var(--font-header);
+      letter-spacing: 0.02em;
+      color: var(--primary);
+    }
+    .skills-bars {
+      display: none;
+      flex-direction: column;
+      gap: 1.2em;
+    }
+    .skills-bars.open {
+      display: flex;
+    }
+    .skill-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.07em;
+      font-weight: 700;
+      margin-bottom: 0.2em;
+      color: var(--primary);
+      font-family: var(--font-header);
+    }
+    .skill-bar-bg {
+      background: #dbeafe;
+      border-radius: 1em;
+      height: 0.9em;
+      width: 100%;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      background: linear-gradient(90deg, var(--primary) 80%, var(--accent) 100%);
+      height: 100%;
+      border-radius: 1em;
+      transition: width 1.2s cubic-bezier(.77,0,.18,1);
+    }
+    body.dark .skill-bar-bg {
+      background: #334155;
+    }
+    .content-area {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+    .projects-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.5em;
+    }
+    .project-card {
+      background: var(--card-light);
+      border-radius: 1em;
+      padding: 1.4em;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+      transition: transform 0.2s, background var(--transition), color var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
+      font-size: 1.07em;
+      font-family: var(--font-body);
+      color: var(--text-light);
+      font-weight: 500;
+    }
+    .project-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(56,189,248,0.09);
+      background: var(--primary);
+      color: #fff;
+    }
+    .project-title {
+      font-size: 1.25em;
+      font-weight: bold;
+      font-family: var(--font-header);
+      color: #facc15;
+      letter-spacing: 0.01em;
+    }
+    .project-card:hover .project-title {
+      color: #fff;
+    }
+    .project-tools {
+      display: flex;
+      gap: 0.5em;
+      flex-wrap: wrap;
+    }
+    .tool-badge {
+      background: var(--accent);
+      color: var(--text-light);
+      padding: 0.2em 0.7em;
+      border-radius: 1em;
+      font-size: 0.97em;
+      font-weight: 700;
+      font-family: var(--font-header);
+    }
+    .project-desc {
+      font-size: 1.05em;
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .cert-list, .exp-list, .edu-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+    }
+    .cert-item, .exp-item, .edu-item {
+      background: var(--card-light);
+      border-radius: 0.7em;
+      padding: 1.1em;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+      font-size: 1.07em;
+      font-family: var(--font-body);
+      color: var(--text-light);
+      font-style: italic;
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+    }
+    body.dark .cert-item, body.dark .exp-item, body.dark .edu-item {
+      background: var(--card-dark);
+      color: var(--text-dark);
+    }
+    .cert-title, .exp-title, .edu-title {
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.2em;
+      font-family: var(--font-header);
+      font-size: 1.13em;
+    }
+    .cert-org, .exp-org, .edu-org {
+      font-size: 1em;
+      color: var(--accent);
+      margin-bottom: 0.3em;
+      font-weight: 700;
+      font-style: normal;
+    }
+    .cert-desc, .exp-desc, .edu-desc {
+      font-size: 1.03em;
+      line-height: 1.4;
+      font-style: italic;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--card-light);
+      border-radius: 1em;
+      padding: 1.5em;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      font-size: 1.07em;
+      font-family: var(--font-body);
+      color: var(--text-light);
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+    }
+    body.dark .contact-form {
+      background: var(--card-dark);
+      color: var(--text-dark);
+    }
+    .contact-form input, .contact-form textarea {
+      padding: 0.8em;
+      border-radius: 0.5em;
+      border: none;
+      background: #f1f5f9;
+      font-size: 1.07em;
+      font-family: inherit;
+      transition: background var(--transition);
+      color: var(--text-light);
+    }
+    body.dark .contact-form input, body.dark .contact-form textarea {
+      background: #23272e;
+      color: var(--text-dark);
+    }
+    .contact-form button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.8em 1.2em;
+      border-radius: 0.5em;
+      font-weight: bold;
+      font-size: 1.07em;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: var(--font-header);
+    }
+    .contact-form button:hover {
+      background: var(--accent);
+      color: var(--text-light);
+    }
+    .contact-links {
+      display: flex;
+      gap: 1.2em;
+      justify-content: center;
+      margin-top: 1.5em;
+    }
+    .contact-link {
+      color: var(--primary);
+      font-size: 2em;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+    .contact-link:hover {
+      color: var(--accent);
+    }
+    .resume-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--text-light);
+      padding: 0.8em 1.7em;
+      border-radius: 2em;
+      font-weight: bold;
+      margin: 1.7em auto 0 auto;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 1px 8px rgba(250,204,21,0.09);
+      text-align: center;
+      font-size: 1.15em;
+      font-family: var(--font-header);
+    }
+    .resume-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    footer {
+      text-align: center;
+      margin: 2.5em 0 0 0;
+      color: #e2e8f0;
+      font-size: 1.1em;
+      font-family: var(--font-header);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-shadow: 1px 2px 8px #00000030;
+    }
+    @media (max-width: 900px) {
+      .main-content {
+        flex-direction: column;
+        gap: 2.5em;
+      }
+      .sidebar {
+        position: static;
+        width: 100%;
+      }
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 0.7em;
+      }
+      header {
+        flex-direction: column;
+        gap: 1em;
+      }
+      .hero-img {
+        width: 90px;
+        height: 90px;
+      }
+      .hero h1 {
+        font-size: 2em;
+      }
+      .section-title {
+        font-size: 1.3em;
+      }
+      .sidebar {
+        padding: 1em 0.5em;
+      }
+      .project-card {
+        padding: 0.8em;
+      }
+      .about {
+        padding: 1em;
+      }
+    }
+    .theme-toggle {
+    width: 56px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .toggle-slider {
+    width: 56px;
+    height: 32px;
+    background: linear-gradient(90deg, #f8fafc 0%,rgb(255, 255, 255) 100%);
+    border-radius: 32px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: background 0.5s;
+    }
+    .toggle-knob {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    background: #ffe066;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 1px #ffe06688;
+    transition: left 0.5s cubic-bezier(.77,0,.18,1), background 0.5s, box-shadow 0.5s;
+    z-index: 2;
+    }
+    .toggle-moon, .toggle-sun {
+    position: absolute;
+    font-size: 1.1em;
+    z-index: 3;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    }
+    .toggle-moon { right: 10px; color: #38bdf8; opacity: 0.6; }
+    .toggle-sun { left: 10px; color: #facc15; opacity: 1; }
+    body.dark .toggle-slider {
+    background: linear-gradient(90deg,rgb(201, 201, 227) 0%, #f8fafc 100%);
+    }
+    body.dark .toggle-knob {
+    left: 28px;
+    background:rgb(65, 126, 232);
+    box-shadow: 0 0 16px 3px #38bdf8aa;
+    }
+    body.dark .toggle-moon { opacity: 1; }
+    body.dark .toggle-sun { opacity: 0.6; }
+    .web3-contact-form {
+  max-width: 420px;
+  margin: 2em auto;
+  background: rgba(39, 39, 42, 0.95);
+  border-radius: 1.2em;
+  box-shadow: 0 4px 32px #000a;
+  padding: 2em 1.5em 1.5em 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+}
+
+.web3-contact-form input,
+.web3-contact-form textarea {
+  width: 100%;
+  padding: 0.9em 1em;
+  border-radius: 0.7em;
+  border: none;
+  background: #23272e;
+  color: #f1f5f9;
+  font-size: 1.08em;
+  font-family: inherit;
+  margin-bottom: 0.6em;
+  box-shadow: 0 1px 8px #0002;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  outline: none;
+  resize: vertical;
+}
+
+.web3-contact-form input:focus,
+.web3-contact-form textarea:focus {
+  background: #18181b;
+  color: #facc15;
+  box-shadow: 0 0 0 2px #38bdf8;
+}
+
+.web3-contact-form button[type="submit"] {
+  background: linear-gradient(90deg, #38bdf8 0%, #facc15 100%);
+  color: #18181b;
+  font-weight: bold;
+  font-size: 1.08em;
+  padding: 0.85em 1.2em;
+  border: none;
+  border-radius: 2em;
+  cursor: pointer;
+  box-shadow: 0 2px 12px #38bdf855;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  margin-top: 0.2em;
+}
+
+.web3-contact-form button[type="submit"]:hover {
+  background: linear-gradient(90deg, #facc15 0%, #38bdf8 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px #facc1555;
+}
+
+@media (max-width: 600px) {
+  .web3-contact-form {
+    padding: 1em 0.5em;
+  }
+}
+.web3-contact-form input,
+.web3-contact-form textarea {
+  width: 100%;
+  box-sizing: border-box; /* ensures padding/border don't overflow */
+  padding: 0.9em 1em;
+  border-radius: 0.7em;
+  border: none;
+  background: #23272e;
+  color: #f1f5f9;
+  font-size: 1.08em;
+  font-family: inherit;
+  margin-bottom: 0.6em;
+  box-shadow: 0 1px 8px #0002;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  outline: none;
+  resize: vertical;
+  display: block;
+}
+
+
+  </style>
+  <!-- Icons (FontAwesome CDN) -->
+  <script src="https://kit.fontawesome.com/6e7b3e6e7f.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- Preloader Overlay -->
+<div id="preloader">
+  <div class="preloader-hex-grid">
+    <div class="hexagon"></div>
+    <div class="hexagon"></div>
+    <div class="hexagon"></div>
+    <div class="hexagon"></div>
+    <div class="hexagon"></div>
+    <div class="hexagon"></div>
+  </div>
+  <div class="preloader-texts">
+    <h1 class="preloader-title">MD Shafaque</h1>
+    <div class="preloader-sub">
+    Portfolio
+    </div>
+  </div>
+</div>
+
+  <!-- 3D Hexagon Animated Background -->
+  <canvas id="hex-bg-canvas"></canvas>
+  <div id="bg-overlay"></div>
+  <div class="container">
+    <!-- Header & Navigation -->
+    <header>
+      <div style="font-size:2em;font-weight:900;letter-spacing:0.04em;font-family:var(--font-header);color:var(--accent);text-shadow:1px 2px 8px #00000030;">
+        MD Shafaque
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+        <a href="#resume">Resume</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+  <span class="toggle-slider">
+    <span class="toggle-knob"></span>
+    <span class="toggle-moon"><i class="fas fa-moon"></i></span>
+    <span class="toggle-sun"><i class="fas fa-sun"></i></span>
+  </span>
+</button>
+
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <img src="https://media.licdn.com/dms/image/v2/D4D03AQGA122OYE4GVg/profile-displayphoto-shrink_200_200/B4DZZywKwkGcAY-/0/1745681952349?e=1754524800&v=beta&t=48-DA7lN7LgyxV63bdJJPjDVTVvr2HhIqXM4MDzrPC0" alt="Profile" class="hero-img" />
+      <h1>MD Shafaque</h1>
+      <div class="tagline">
+  Civil Engineer by Degree, <b>AI Developer</b> by Passion — Bridging Structural Insight with Intelligent Systems.
+</div>
+
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Machine Learning</span>
+        <span class="skill-tag">Natural Language Processing</span>
+        <span class="skill-tag">Deep Learning</span>
+        <span class="skill-tag">Data Structures & Algorithms</span>
+        <span class="skill-tag">PyTorch</span>
+        <span class="skill-tag">TensorFlow</span>
+        <span class="skill-tag">OpenCV</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">NumPy</span>
+        <span class="skill-tag">Matplotlib</span>
+        <span class="skill-tag">Seaborn</span>
+        <span class="skill-tag">Hindi</span>
+        <span class="skill-tag">English</span>
+      </div>
+    </section>
+
+    <div class="main-content">
+      <!-- Sidebar: Collapsible Skills Bars -->
+      <aside class="sidebar" id="skillsSidebar">
+        <div class="sidebar-header" id="sidebarHeader">
+          <span>Technical Skills</span>
+          <span id="sidebarToggle" style="cursor:pointer;"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="skills-bars" id="skillsBars">
+          <!-- Skill bars: 80-90% filled -->
+          <div>
+            <div class="skill-bar-label"><span>Python</span><span>90%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>AI/ML</span><span>90%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>NLP</span><span>85%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>Deep Learning</span><span>85%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>PyTorch</span><span>80%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>TensorFlow</span><span>80%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>YOLO</span><span>60%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:60%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>OpenCV</span><span>60%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:60%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>Pandas & Numpy</span><span>90%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>AutoCAD</span><span>70%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:70%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>Civil Engineering</span><span>95%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:95%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>SQL</span><span>40%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:40%"></div></div>
+          </div>
+          <div>
+            <div class="skill-bar-label"><span>Git</span><span>45%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:45%"></div></div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="content-area">
+        <!-- About -->
+        <section id="about">
+          <h2 class="section-title">About Me</h2>
+          <div class="about">
+            I'm an undergraduate at <b>NIT Calicut</b>, pursuing a B.Tech in Civil Engineering with a Minor in Artificial Intelligence and Machine Learning. My passion is building intelligent systems, especially in Python, NLP, and deep learning. I actively engage in personal and research-based AI projects, aiming to bridge engineering with cutting-edge technology.
+            <br><br>
+            <b>Interests:</b> AI, ML, Python, NLP, Deep Learning, Computer Vision, Multilingual AI.<br>
+            <b>Goal:</b> To leverage AI for real-world impact and innovation.
+          </div>
+        </section>
+        <!-- Projects -->
+        <section id="projects">
+          <h2 class="section-title">Major Projects</h2>
+          <div class="projects-list">
+            <div class="project-card">
+              <div class="project-title">Air Quality Prediction Using LSTM Networks: A Deep Learning Approach</div>
+              <div class="project-tools">
+                <span class="tool-badge">Python</span>
+                <span class="tool-badge">LSTM</span>
+                <span class="tool-badge">Deep Learning</span>
+              </div>
+              <div class="project-desc">
+                The project uses historical pollutant data to train LSTM models that forecast pollutant levels 24 hours ahead. Built with TensorFlow, the models are optimized for time-series analysis and can scale for real-time applications.
+              </div>
+            </div>
+            <div class="project-card">
+              <div class="project-title">Legal Document Question Answering System (In Progress)</div>
+              <div class="project-tools">
+                <span class="tool-badge">Python</span>
+                <span class="tool-badge">BERT/SBERT</span>
+                <span class="tool-badge">FAISS</span>
+                <span class="tool-badge">LlamaIndex</span>
+                <span class="tool-badge">Streamlit</span>
+              </div>
+              <div class="project-desc">
+                Building an NLP-powered system to extract and answer queries from legal documents such as contracts and policies.
+              </div>
+            </div>
+            <div class="project-card">
+              <div class="project-title">Concrete Strength Predictor App</div>
+              <div class="project-tools">
+                <span class="tool-badge">Python</span>
+                <span class="tool-badge">k-Nearest Neighbors</span>
+                <span class="tool-badge">Streamlit</span>
+              </div>
+              <div class="project-desc">
+                Built a Concrete Strength Prediction App using K-Nearest Neighbors Regression, leveraging Machine Learning to estimate compressive strength based on mix proportions. The model processes inputs like cement content, water ratio, and aggregates to deliver precise strength predictions—minimizing material waste and improving efficiency.
+              </div>
+            </div>
+            <div class="project-card">
+              <div class="project-title">Agrolux - Hydroponic Farming for Saffron (Business) : Market Analysis, Demand Forecasting & Business Plan</div>
+              <div class="project-tools">
+                <span class="tool-badge">Team Leadership</span>
+                <span class="tool-badge">Business Analytics</span>
+                <span class="tool-badge">Operational Planning</span>
+              </div>
+              <div class="project-desc">
+                Proud to have led a dynamic team in developing Saffron-X, an innovative saffron-based product under our startup concept AgroLux.
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Certifications & Achievements -->
+        <section id="certifications">
+          <h2 class="section-title">Certifications & Achievements</h2>
+          <ul class="cert-list">
+            <li class="cert-item">
+              <div class="cert-title">Complete Data Science, Machine Learning, DL, NLP Bootcamp</div>
+              <div class="cert-org">Udemy</div>
+              <div class="cert-desc">Completed an end-to-end bootcamp covering Data Science, Machine Learning, Deep Learning, and Natural Language Processing. Gained hands-on experience with real-world projects using Python, Pandas, Scikit-learn, TensorFlow, and NLP libraries, mastering the full data pipeline from preprocessing to model deployment.</div>
+            </li>
+            <li class="cert-item">
+              <div class="cert-title">Introduction to Pandas: Badge</div>
+              <div class="cert-org">LeetCode</div>
+              <div class="cert-desc">Awarded for proficiency in Pandas data manipulation.</div>
+            </li>
+            <li class="cert-item">
+              <div class="cert-title">Introduction to Machine Learning</div>
+              <div class="cert-org">Great Learning</div>
+              <div class="cert-desc">Comprehensive ML course covering an introductions supervised, unsupervised learning & basic domains</div>
+            </li>
+            <li class="cert-item">
+              <div class="cert-title">Agile Project Management </div>
+              <div class="cert-org">HP Life</div>
+              <div class="cert-desc">Gained foundational knowledge of Agile principles and methodologies, including sprint planning, iterative development, and team collaboration strategies. Applied Agile techniques to manage projects efficiently and adapt to changing requirements in dynamic environments.</div>
+            </li>
+          </ul>
+        </section>
+        <!-- Experience -->
+        <section id="experience">
+          <h2 class="section-title">Experience</h2>
+          <ul class="exp-list">
+            <li class="exp-item">
+              <div class="exp-title">Research Intern</div>
+              <div class="exp-org">NIT Calicut</div>
+              <div class="exp-desc">
+                May 2025 – Present<br>
+                Creating a Hybrid Explainable Decision Framework for Electric Two-Wheeler Adoption.
+              </div>
+            </li>
+            <li class="exp-item">
+              <div class="exp-title">Team Lead</div>
+              <div class="exp-org">NIT Calicut</div>
+              <div class="exp-desc">
+                Jan 2025 – Apr 2025<br>
+                Led a dynamic team in developing Saffron-X, an innovative saffron-based product under our startup concept AgroLux.
+              </div>
+            </li>
+          </ul>
+        </section>
+        <!-- Education -->
+        <section id="education">
+          <h2 class="section-title">Education</h2>
+          <ul class="edu-list">
+            <li class="edu-item">
+              <div class="edu-title">B.Tech in Civil Engineering</div>
+              <div class="edu-org">NIT Calicut</div>
+              <div class="edu-desc">
+                Minor: Artificial Intelligence & Machine Learning<br>
+                Expected Graduation: 2027<br>
+                CGPA: 9.63<br>
+                Academic Highlights: Top 5 Students in Department of Civil Engineering, Top 5 in AI/ML coursework, research projects.
+              </div>
+            </li>
+            <li class="edu-item">
+              <div class="edu-title">Pre-University Education</div>
+              <div class="edu-org">
+Sterling School</div>
+              <div class="edu-desc">
+                2020 - 2022<br>
+                Grade: 88.6%<br>
+                Stream: PCM<br>
+                CBSE Board<br>
+                </div>
+            </li>
+            <li class="edu-item">
+              <div class="edu-title">High School Education</div>
+              <div class="edu-org">Beena Public School</div>
+              <div class="edu-desc">
+                2018 - 2020<br>
+                Grade: 92.8%<br>
+                CBSE Board<br>
+                </div>
+            </li>
+          </ul>
+        </section>
+        <!-- Contact -->
+        <section id="contact">
+          <h2 class="section-title">Contact</h2>
+
+
+        
+
+
+        <form class="web3-contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="d41c4cc3-2563-40fe-8cf2-c3bf4ae62584">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+        </form>
+
+
+
+        <script src="https://web3forms.com/client/script.js" async defer></script>
+
+          <div class="contact-links">
+            <a href="mailto:your.email@example.com" class="contact-link" title="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/md-shafaque-37973b280/" class="contact-link" title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/md-shafaque-56" class="contact-link" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://leetcode.com/mdshafaque" class="contact-link" title="LeetCode" target="_blank"><i class="fas fa-code"></i></a>
+          </div>
+        </section>
+        <!-- Resume -->
+        <section id="resume" style="text-align:center;">
+          <h2 class="section-title">Resume</h2>
+          <a href="https://drive.google.com/file/d/1kdqQPX2UvwytIuPTvCS06b1QNkQb1q5C/view?usp=drive_link" class="resume-btn" download>Download PDF</a>
+        </section>
+      </div>
+    </div>
+    <footer>
+      &copy; 2025 MD Shafaque &mdash; Built with passion for AI & ML.
+    </footer>
+  </div>
+  <script>
+    // 3D Hexagon Canvas Animation
+  // Wait for everything (including images/fonts) to load
+    window.addEventListener('load', function() {
+    setTimeout(function() {
+      document.body.classList.add('loaded');
+    }, 1200); // Keep preloader for at least 1.2s for effect
+    });
+
+
+    const canvas = document.getElementById('hex-bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let hexRadius = 38;
+    let hexHeight = Math.sqrt(3) * hexRadius;
+    let cols, rows;
+    let time = 0;
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      cols = Math.ceil(width / (hexRadius * 1.5)) + 2;
+      rows = Math.ceil(height / hexHeight) + 2;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    function drawHex(x, y, r, color, alpha=1, lineWidth=2) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        let angle = Math.PI / 3 * i + Math.PI / 6;
+        let px = x + r * Math.cos(angle);
+        let py = y + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.stroke();
+      ctx.restore();
+    }
+    function animateHexGrid() {
+      ctx.clearRect(0, 0, width, height);
+      let t = time * 0.003;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          let x = col * hexRadius * 1.5;
+          let y = row * hexHeight + ((col % 2) * hexHeight / 2);
+          // Animate color and alpha for 3D effect
+          let dist = Math.sqrt((x - width/2)**2 + (y - height/2)**2);
+          let phase = t + dist * 0.012;
+          let alpha = 0.24 + 0.24 * Math.cos(phase);
+          let color = `rgba(80,200,255,${0.4+0.3*Math.sin(phase)})`;
+          drawHex(x, y, hexRadius, color, alpha, 2.2 + 1.2*Math.sin(phase));
+        }
+      }
+      time++;
+      requestAnimationFrame(animateHexGrid);
+    }
+    animateHexGrid();
+
+    // Theme toggle (dark/light)
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        body.classList.add('dark');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('bg-overlay').style.background = 'rgba(18,22,34,0.75)';
+      } else {
+        body.classList.remove('dark');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        localStorage.setItem('theme', 'light');
+        document.getElementById('bg-overlay').style.background = 'rgba(18,22,34,0.65)';
+      }
+    }
+    // Load theme from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) setTheme(savedTheme);
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('dark') ? 'light' : 'dark');
+    });
+
+    // Sidebar skills collapse/pin
+    const sidebarHeader = document.getElementById('sidebarHeader');
+    const skillsBars = document.getElementById('skillsBars');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    let sidebarOpen = false;
+    sidebarHeader.addEventListener('click', () => {
+      sidebarOpen = !sidebarOpen;
+      skillsBars.classList.toggle('open', sidebarOpen);
+      sidebarToggle.innerHTML = sidebarOpen
+        ? '<i class="fas fa-chevron-up"></i>'
+        : '<i class="fas fa-chevron-down"></i>';
+    });
+    // Open by default on desktop
+    if (window.innerWidth > 900) {
+      skillsBars.classList.add('open');
+      sidebarOpen = true;
+      sidebarToggle.innerHTML = '<i class="fas fa-chevron-up"></i>';
+    }
+
+    // Fade-in/out on reload (body)
+    document.body.style.opacity = 0;
+    window.onload = () => {
+      document.body.style.transition = 'opacity 1s cubic-bezier(.77,0,.18,1)';
+      document.body.style.opacity = 1;
+    };
+    window.onbeforeunload = () => {
+      document.body.style.opacity = 0;
+    };
+
+    // Fade-in sections on scroll (Intersection Observer)
+    const sections = document.querySelectorAll('section');
+    const observer = new window.IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.13 });
+    sections.forEach(sec => observer.observe(sec));
+
+    // Responsive sidebar: auto-close on mobile
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 900) {
+        skillsBars.classList.remove('open');
+        sidebarOpen = false;
+        sidebarToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+      } else {
+        skillsBars.classList.add('open');
+        sidebarOpen = true;
+        sidebarToggle.innerHTML = '<i class="fas fa-chevron-up"></i>';
+      }
+    });
+
+    // Contact form: prevent default for demo
+    document.querySelector('.web3-contact-form').addEventListener('submit', function(e) {
+      alert('Thank you for your message! (Demo: Form not actually sent)');
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
